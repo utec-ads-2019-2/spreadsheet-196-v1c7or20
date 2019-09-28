@@ -1,30 +1,32 @@
-#include <iostream>
-#include <string>
+#include<string>
+#include<cstdlib>
+#include<iostream>
+#include<cstring>
 #include <iomanip>
-#include <memory.h>
 
 using namespace std;
 
 
-string formula[10000][10000];
-int numb[10000][10000];
+string formula[1000][1000];
+int numb[1000][1000];
 
 int solve(int i,int j){
-    int r,c;
-    numb[i][j] = r = c = 0;
+    if (numb[i][j] != -10000)
+        return numb[i][j];
+    int r=0,c=0;
+    numb[i][j] = 0;
     string str = formula[i][j];
-    for (int k = 1; k <str.size()+1 ; k++) {
-        if (isdigit(str.at(k))){
-            r = r*10+str.at(k)-'0';
-        } else if(str.at(k)>='A' and str.at(k) =='Z'){
-            c =c*26+str.at(k)-'A'+1;
-        }else if (str.at(k) == '+' or k == str.size()){
+    for (int k = 1; k <=str.size()+1 ; k++) {
+        if (str[k] >='0' and str[k]<='9'){
+            r = r*10+str[k]-'0';
+        } else if(str[k]>= 'A' and str[k] <='Z'){
+            c =c*26+str[k]-'A'+1;
+        }else if (str[k] == '+' or k == str.size()){
             numb[i][j] +=solve(r,c);
             r = c = 0;
         }
-        return numb[i][j];
     }
-    return 0;
+    return numb[i][j];
 }
 
 int main(){
@@ -32,9 +34,8 @@ int main(){
     cin>>spread;
     for (int k= 0; k < spread; k++) {
         cin>>col>>rows;
-        memset(numb,0, sizeof(numb));
-        for (int i = 0; i <rows ; i++) {
-            for (int j = 0; j < col; j++) {
+        for (int i =1; i <=rows ; i++) {
+            for (int j = 1; j <= col; j++) {
                 string dato;
                 cin>>dato;
                 if (dato.at(0) == '='){
@@ -45,16 +46,18 @@ int main(){
                 }
             }
         }
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < col; ++j) {
+        for (int i = 1; i <= rows; ++i) {
+            for (int j = 1; j <= col; ++j) {
                 if (numb[i][j] == -10000)
                     solve(i, j);
             }
         }
-        for (int i = 0; i < rows; ++i) {
-            for (int j = 0; j < col; ++j) {
-                cout<<setw(2)<<numb[i][j];
-            }cout<<endl;
+        int i,j;
+        for ( i = 1; i <= rows; ++i) {
+            for ( j = 1; j < col; ++j) {
+                printf("%d ",numb[i][j]);
+            }
+                printf("%d\n",numb[i][j]);
         }
     }
     return 0;
